@@ -23,4 +23,5 @@ git reset --soft HEAD~1
 git reset --hard HEAD~1 
 Source: https://graphite.dev/guides/how-to-delete-a-git-commit. 
 git rm prisma/dev.db-journal
+Source: https://www.quora.com/How-do-I-uncommit-a-file-in-Git
 */
