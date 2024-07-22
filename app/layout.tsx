@@ -19,6 +19,8 @@ export default function RootLayout({
 }
 
 /* Notes
+git reset --soft HEAD~1
 git reset --hard HEAD~1 
 Source: https://graphite.dev/guides/how-to-delete-a-git-commit. 
+git rm prisma/dev.db-journal
 */
