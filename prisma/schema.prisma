@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  statusTitle            String         @default("NONE")
+  statusDashboard        String         @default("NONE")
+  statusRelations        String         @default("NONE")
+  statusCriteria         String         @default("NONE")
+  statusGroupsOfUsers    String         @default("NONE")
+  statusGroupsOfCriteria String         @default("NONE")
+
+  emailAddress           String         @unique
+  hashedPassword         String
+  username               String         @unique
+  pseudoname             String
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  pinnedRelationId       String?        @unique
+  pinnedRelation         Relation?      @relation("PinnedRelation", fields: [pinnedRelationId], references: [id])
+
+  relationsSelecting     Relation[]     @relation("SelectingUser")
+  relationsSelected      Relation[]     @relation("SelectedUser")
+
+  criteria               Criterion[]
+
+  groupsOfUsers          GroupOfUsers[] @relation("GroupOfUsersCreatorUser")
+
+  monoUserGroups         GroupOfUsers[] @relation("MonoUser")
+
+  groupOfUsersUsers      GroupOfUsersUser[]
+
+  groupsOfCriteria          GroupOfCriteria[] @relation("GroupOfCriteriaCreatorUser")
+}
+
+model Relation {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  isBookmarked           Boolean        @default(false)
+  bookmarkedAt           DateTime?
+  isBlocked              Boolean        @default(false)
+  blockedAt              DateTime?
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  selectingUserId        String         @map("selectingUserId")
+  selectingUser          User           @relation("SelectingUser", fields: [selectingUserId], references: [id])
+
+  selectedUserId         String         @map("selectedUserId")
+  selectedUser           User           @relation("SelectedUser", fields: [selectedUserId], references: [id])  
+
+  pinningUser            User?          @relation("PinnedRelation")
+}
+
+model Criterion {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  question               String
+  answer                 String
+  source                 String?
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  userId                 String
+  user                   User           @relation(fields: [userId], references: [id])
+
+  monoCriterionGroups    GroupOfCriteria[] 
+
+  groupOfCriteriaCriteria      GroupOfCriteriaCriterion[]
+}
+
+model GroupOfUsers {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  name                   String
+  description            String
+  hasMembersVisible      Boolean        @default(true)
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  creatorUserId          String
+  creatorUser            User           @relation("GroupOfUsersCreatorUser", fields: [creatorUserId], references: [id])
+
+  monoUserId             String
+  monoUser               User           @relation("MonoUser", fields: [monoUserId], references: [id])
+
+  users      GroupOfUsersUser[]
+}
+
+model GroupOfUsersUser {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  groupOfUsersId         String
+  groupOfUsers           GroupOfUsers           @relation(fields: [groupOfUsersId], references: [id])
+
+  userId                 String
+  user                   User           @relation(fields: [userId], references: [id])
+}
+
+model GroupOfCriteria {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  name                   String
+  description            String
+  hasMembersVisible      Boolean        @default(true)
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  creatorUserId          String
+  creatorUser            User           @relation("GroupOfCriteriaCreatorUser", fields: [creatorUserId], references: [id])
+
+  monoCriterionId        String
+  monoCriterion          Criterion           @relation(fields: [monoCriterionId], references: [id])
+
+  criteria      GroupOfCriteriaCriterion[]
+}
+
+model GroupOfCriteriaCriterion {
+  id                     String         @id @default(uuid())
+  state                  String         @default("NONE")
+
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt @default(now())
+
+  groupOfCriteriaId         String
+  groupOfCriteria           GroupOfCriteria           @relation(fields: [groupOfCriteriaId], references: [id])
+
+  criterionId                 String
+  criterion                   Criterion           @relation(fields: [criterionId], references: [id])
+}
+
+// Notes
+
+// I want to enforce descriptions on GroupOfUsers so that when creating a group, a user has to explain why they have created this group. Therefore same goes for GroupOfCriteria.
