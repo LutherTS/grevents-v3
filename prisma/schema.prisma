@@ -138,7 +138,7 @@ model GroupOfCriteria {
   monoCriterion          Criterion           @relation(fields: [monoCriterionId], references: [id])
 
   criteria      GroupOfCriteriaCriterion[]
-}
+} 
 
 model GroupOfCriteriaCriterion {
   id                     String         @id @default(uuid())
