@@ -1,0 +1,211 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  statusTitle                    String                    @default("NONE")
+  statusDashboard                String                    @default("NONE")
+  statusRelations                String                    @default("NONE")
+  statusCriteria                 String                    @default("NONE")
+  statusGroupsOfUsers            String                    @default("NONE")
+  statusGroupsOfCriteria         String                    @default("NONE")
+
+  emailAddress                   String                    @unique
+  hashedPassword                 String
+  username                       String                    @unique
+  pseudoname                     String
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  pinnedRelationId               String?                   @unique
+  pinnedRelation                 Relation?                 @relation("PinnedRelation", fields: [pinnedRelationId], references: [id])
+
+  relationsSelecting             Relation[]                @relation("SelectingUser")
+
+  relationsSelected              Relation[]                @relation("SelectedUser")
+
+  criteria                       Criterion[]
+
+  groupsOfUsers                  GroupOfUsers[]            @relation("GroupOfUsersCreatorUser")
+
+  monoUserGroups                 GroupOfUsers[]            @relation("MonoUser")
+
+  groupsOfUsersUser              GroupOfUsersUser[]
+
+  groupsOfCriteria               GroupOfCriteria[]
+
+  userGroupOfCriteriaCriteria    UserGroupOfCriteriaCriterion[]
+}
+
+model Relation {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  statusProfile                  String                    @default("NONE")
+
+  isBookmarked                   Boolean                   @default(false)
+  bookmarkedAt                   DateTime?
+  isBlocked                      Boolean                   @default(false)
+  blockedAt                      DateTime?
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  selectingUserId                String                    @map("selectingUserId")
+  selectingUser                  User                      @relation("SelectingUser", fields: [selectingUserId], references: [id])
+
+  selectedUserId                 String                    @map("selectedUserId")
+  selectedUser                   User                      @relation("SelectedUser", fields: [selectedUserId], references: [id])  
+
+  pinningUser                    User?                     @relation("PinnedRelation")
+}
+
+model Criterion {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  question                       String
+  answer                         String
+  source                         String?
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  userId                         String
+  user                           User                      @relation(fields: [userId], references: [id])
+
+  monoCriterionGroups            GroupOfCriteria[] 
+
+  groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]
+}
+
+// common Group base for Users
+model GroupOfUsers {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  name                           String
+  description                    String
+  hasMembersVisible              Boolean                   @default(true)
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  creatorUserId                  String
+  creatorUser                    User                      @relation("GroupOfUsersCreatorUser", fields: [creatorUserId], references: [id])
+
+  monoUserId                     String
+  monoUser                       User                      @relation("MonoUser", fields: [monoUserId], references: [id])
+
+  groupOfUsersUsers              GroupOfUsersUser[]
+
+  groupOfUsersGroupsOfCriteria   GroupOfUsersGroupOfCriteria[]
+}
+
+model GroupOfUsersUser {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  groupOfUsersId                 String
+  groupOfUsers                   GroupOfUsers              @relation(fields: [groupOfUsersId], references: [id])
+
+  userId                         String
+  user                           User                      @relation(fields: [userId], references: [id])
+}
+
+// common Group base for Criteria
+model GroupOfCriteria {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  name                           String
+  description                    String
+  hasMembersVisible              Boolean                   @default(true)
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  creatorUserId                  String
+  creatorUser                    User                      @relation(fields: [creatorUserId], references: [id])
+
+  monoCriterionId                String
+  monoCriterion                  Criterion                 @relation(fields: [monoCriterionId], references: [id])
+
+  groupOfCriteriaCriteria        GroupOfCriteriaCriterion[]
+
+  groupsOfUsersGroupOfCriteria   GroupOfUsersGroupOfCriteria[]
+} 
+
+model GroupOfCriteriaCriterion {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  groupOfCriteriaId              String
+  groupOfCriteria                GroupOfCriteria           @relation(fields: [groupOfCriteriaId], references: [id])
+
+  criterionId                    String
+  criterion                      Criterion                 @relation(fields: [criterionId], references: [id])
+
+  usersGroupOfCriteriaCriterion  UserGroupOfCriteriaCriterion[]
+}
+
+model GroupOfUsersGroupOfCriteria {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  groupOfUsersId                 String
+  groupOfUsers                   GroupOfUsers              @relation(fields: [groupOfUsersId], references: [id])
+
+  groupOfCriteriaId              String
+  groupOfCriteria                GroupOfCriteria           @relation(fields: [groupOfCriteriaId], references: [id])
+}
+
+model UserGroupOfCriteriaCriterion {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  isPinnedForProfile             Boolean                   @default(false)
+  pinnedForProfileAt             DateTime?
+  isPinnedForDashboard           Boolean                   @default(false)
+  pinnedForDashboardAt           DateTime?
+  isPinnedForGroupOfUsers        Boolean                   @default(false)
+  pinnedForGroupOfUsersAt        DateTime?
+  isPinnedForGroupOfCriteria     Boolean                   @default(false)
+  pinnedForGroupOfCriteriaAt     DateTime?
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+           
+  userId                         String
+  user                           User                      @relation(fields: [userId], references: [id])
+
+  groupOfCriteriaCriterionId     String
+  groupOfCriteriaCriterion       GroupOfCriteriaCriterion  @relation(fields: [groupOfCriteriaCriterionId], references: [id])
+}
+
+// Notes
+
+// I want to enforce descriptions on GroupOfUsers so that when creating a group, a user has to explain why they have created this group. Therefore same goes for GroupOfCriteria.
+// No limits to pinning this time, because criteria pinned will be shown both on top and at the bottom of a profile, given that they will be shown at the bottom in the context of a group.
+// Therefore, while there would be limits to pins allowed, the limits will be in pinned shown. I could be imperative to then light a pin in a different color if it is bound to not be shown where it is pinned as it is beyond the limit. (Say the limit is 8, the latest criteria is the 9th, then the oldest up to the latest 8 will no longer be visible in that pinning context.)

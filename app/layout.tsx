@@ -17,3 +17,8 @@ export default function RootLayout({
     </html>
   );
 }
+
+/* Notes
+git reset --hard HEAD~1 
+Source: https://graphite.dev/guides/how-to-delete-a-git-commit. 
+*/
