@@ -24,4 +24,5 @@ git reset --hard HEAD~1
 Source: https://graphite.dev/guides/how-to-delete-a-git-commit. 
 git rm prisma/dev.db-journal
 Source: https://www.quora.com/How-do-I-uncommit-a-file-in-Git
+git rm removes the file both from git and from the computer. The preferred flow is copying the file on the desktop, then git rm'ing it from the terminal, closing VSCode, relaunching VSCode, and dragging the file back into VSCode to see it be effectively ignored.
 */
