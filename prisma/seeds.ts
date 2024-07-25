@@ -262,6 +262,8 @@ async function seed() {
 
   console.log(`...Users seeded.`);
 
+  console.log(`Seeding Criteria...`);
+
   console.log(`Filtering users data for first names.`);
 
   const usersDataWithFirstNames = usersData.filter(
@@ -273,6 +275,7 @@ async function seed() {
   for (const userData of usersDataWithFirstNames) {
     await prisma.criterion.create({
       data: {
+        state: "LIVE",
         question: "First name",
         answer: userData.firstNameAnswer,
         user: {
@@ -297,6 +300,7 @@ async function seed() {
   for (const userData of usersDataWithLastNames) {
     await prisma.criterion.create({
       data: {
+        state: "LIVE",
         question: "Last name",
         answer: userData.lastNameAnswer,
         user: {
@@ -309,6 +313,31 @@ async function seed() {
   }
 
   console.log(`...Last names criteria seeded.`);
+
+  console.log(`...Criteria seeded.`);
+
+  console.log(`Seeding GroupsOfCriteria...`);
+
+  console.log(`Filtering users data for first names last names.`);
+
+  const usersDataWithFirstNamesLastNames = usersData.filter(
+    (e) => e.firstNameAnswer !== undefined && e.lastNameAnswer !== undefined,
+  );
+
+  for (const userData of usersDataWithFirstNamesLastNames) {
+    await prisma.groupOfCriteria.create({
+      data: {
+        state: "LIVE",
+        name: "Names",
+        description: "My first name, last name and other names.",
+        creatorUser: {
+          connect: {
+            signInEmailAddress: userData.signInEmailAddress,
+          },
+        },
+      },
+    });
+  }
 
   console.log(`...Initial seeds complete.`);
 }
