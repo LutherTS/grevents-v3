@@ -86,6 +86,8 @@ model Criterion {
   userId                         String
   user                           User                      @relation(fields: [userId], references: [id])
 
+  @@unique([question, userId])
+
   monoCriterionGroups            GroupOfCriteria[] 
 
   groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]

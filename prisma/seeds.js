@@ -318,7 +318,7 @@ seed();
 /* Notes
 // rm ./prisma/dev.db
 // npx prisma db push
-// node --loader ts-node/esm prisma/seeds.js
+// npx prisma db seed
 
 // "type": "module",
 
