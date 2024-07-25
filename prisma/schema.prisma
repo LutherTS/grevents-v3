@@ -67,7 +67,9 @@ model Relation {
   selectingUser                  User                      @relation("SelectingUser", fields: [selectingUserId], references: [id])
 
   selectedUserId                 String                    @map("selectedUserId")
-  selectedUser                   User                      @relation("SelectedUser", fields: [selectedUserId], references: [id])  
+  selectedUser                   User                      @relation("SelectedUser", fields: [selectedUserId], references: [id])
+
+  @@unique([selectingUserId, selectedUserId])
 
   pinningUser                    User?                     @relation("PinnedRelation")
 }
@@ -221,3 +223,5 @@ model UserGroupOfCriteriaCriterion {
 // Therefore, while there would be limits to pins allowed, the limits will be in pinned shown. I could be imperative to then light a pin in a different color if it is bound to not be shown where it is pinned as it is beyond the limit. (Say the limit is 8, the latest criteria is the 9th, then the oldest up to the latest 8 will no longer be visible in that pinning context.)
 
 // I think I can do await with some the GroupOfCriteriaCriterion joint table through Prisma. ...No, since I need it for UserGroupOfCriteriaCriterion, which is the basis of my pin system.
+
+// I could add a mirror Relation on the relation table, this time optional. This will both combine flexibility through optionality, and the convience of doing only one database call just like in v2. 

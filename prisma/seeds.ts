@@ -7,6 +7,8 @@ async function seed() {
 
   console.log(`Creating users data.`);
 
+  // NOTE: DO NOT TOUCH SIGNINEMAILADDRESS. IT'S USED HARD-CODED.
+
   const usersData = [
     {
       // “me” / LePapier
@@ -154,94 +156,94 @@ async function seed() {
       firstNameAnswer: "Pamela",
       lastNameAnswer: "Nargacuga",
     },
-    {
-      // Quentin / WhoDidThatToYou
-      signInEmailAddress: "q@q.com",
-      hashedPassword:
-        "$2a$12$GUVQktRR33Pxm9lxVAhmbu9SC.dInMR2h3Q7oNL3zYOngDaB7tOEe", // WhoDidThatToYou
-      username: "WhoDidThatToYou",
-      pseudoname: "Quentin",
-      // First name and last name criteria
-      firstNameAnswer: "Quentin",
-      lastNameAnswer: "Tartarino",
-    },
-    {
-      // Roland / RG
-      signInEmailAddress: "r@r.com",
-      hashedPassword:
-        "$2a$12$upWLe7nfwK8mxnCJccSpEuhuq7Zgcl6zP0iOopC3vgyLDW1LH9dkO", // RG
-      username: "RG",
-      pseudoname: "Roland",
-      // First name and last name criteria
-      firstNameAnswer: "Roland",
-      lastNameAnswer: "Gerric",
-    },
-    {
-      // Soren / TruePrince
-      signInEmailAddress: "s@s.com",
-      hashedPassword:
-        "$2a$12$G2A1bB4nKn66WVC9lkQWP.9qh2//xod6vQbTZNisyPB39YyuSTQiO", // TruePrince
-      username: "TruePrince",
-      pseudoname: "Soren",
-      // First name and last name criteria
-      firstNameAnswer: "Soren",
-      lastNameAnswer: "Daein",
-    },
-    {
-      // Titus / TheTitan
-      signInEmailAddress: "t@t.com",
-      hashedPassword:
-        "$2a$12$OcHGmHR.zYmGo08sC80ZZuyP9KntjOHVG6RnrFKXnw2HyGSYU3X5m", // TheTitan
-      username: "TheTitan",
-      pseudoname: "Titus",
-      // First name and last name criteria
-      firstNameAnswer: "Titus",
-      lastNameAnswer: "Invictus",
-    },
-    {
-      // Ursula / BlueCrow
-      signInEmailAddress: "u@u.com",
-      hashedPassword:
-        "$2a$12$ZFCN7rFeEgmVOYQ6M31mgehpGV1m8NiQ/CWGx3/qKTkJ4xOqWxhs.", // BlueCrow
-      username: "BlueCrow",
-      pseudoname: "Ursula",
-      // First name and last name criteria
-      firstNameAnswer: "Ursula",
-      lastNameAnswer: "Black",
-    },
-    {
-      // Victoria / LaVictoire
-      signInEmailAddress: "v@v.com",
-      hashedPassword:
-        "$2a$12$QulFtzyqoOve.o6WMyLwCuzP6aUIfjksEPveRajJpcvcf.ojlGOgK", // LaVictoire
-      username: "LaVictoire",
-      pseudoname: "Victoria",
-      // First name and last name criteria
-      firstNameAnswer: "Victoria",
-      lastNameAnswer: "Spice",
-    },
-    {
-      // Wilda / oftheWild
-      signInEmailAddress: "w@w.com",
-      hashedPassword:
-        "$2a$12$Y6eTEC/CBKoaZ7ryJDR6PuqxOaES6EZA.GjY8zjxsUb6XUYqo0die", // oftheWild
-      username: "oftheWild",
-      pseudoname: "Wilda",
-      // First name and last name criteria
-      firstNameAnswer: "Wilda",
-      lastNameAnswer: "Wilderness",
-    },
-    {
-      // Xenobia / ResRevealed
-      signInEmailAddress: "x@x.com",
-      hashedPassword:
-        "$2a$12$v2MeRBz0ncCEBS3WMMDb.emMdjgL2Ep0bptqNRr.tsCiqcfowHsmG", // ResRevealed
-      username: "ResRevealed",
-      pseudoname: "Xenobia",
-      // First name and last name criteria
-      firstNameAnswer: "Xenobia",
-      lastNameAnswer: "Desistoria",
-    },
+    // {
+    //   // Quentin / WhoDidThatToYou
+    //   signInEmailAddress: "q@q.com",
+    //   hashedPassword:
+    //     "$2a$12$GUVQktRR33Pxm9lxVAhmbu9SC.dInMR2h3Q7oNL3zYOngDaB7tOEe", // WhoDidThatToYou
+    //   username: "WhoDidThatToYou",
+    //   pseudoname: "Quentin",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Quentin",
+    //   lastNameAnswer: "Tartarino",
+    // },
+    // {
+    //   // Roland / RG
+    //   signInEmailAddress: "r@r.com",
+    //   hashedPassword:
+    //     "$2a$12$upWLe7nfwK8mxnCJccSpEuhuq7Zgcl6zP0iOopC3vgyLDW1LH9dkO", // RG
+    //   username: "RG",
+    //   pseudoname: "Roland",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Roland",
+    //   lastNameAnswer: "Gerric",
+    // },
+    // {
+    //   // Soren / TruePrince
+    //   signInEmailAddress: "s@s.com",
+    //   hashedPassword:
+    //     "$2a$12$G2A1bB4nKn66WVC9lkQWP.9qh2//xod6vQbTZNisyPB39YyuSTQiO", // TruePrince
+    //   username: "TruePrince",
+    //   pseudoname: "Soren",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Soren",
+    //   lastNameAnswer: "Daein",
+    // },
+    // {
+    //   // Titus / TheTitan
+    //   signInEmailAddress: "t@t.com",
+    //   hashedPassword:
+    //     "$2a$12$OcHGmHR.zYmGo08sC80ZZuyP9KntjOHVG6RnrFKXnw2HyGSYU3X5m", // TheTitan
+    //   username: "TheTitan",
+    //   pseudoname: "Titus",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Titus",
+    //   lastNameAnswer: "Invictus",
+    // },
+    // {
+    //   // Ursula / BlueCrow
+    //   signInEmailAddress: "u@u.com",
+    //   hashedPassword:
+    //     "$2a$12$ZFCN7rFeEgmVOYQ6M31mgehpGV1m8NiQ/CWGx3/qKTkJ4xOqWxhs.", // BlueCrow
+    //   username: "BlueCrow",
+    //   pseudoname: "Ursula",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Ursula",
+    //   lastNameAnswer: "Black",
+    // },
+    // {
+    //   // Victoria / LaVictoire
+    //   signInEmailAddress: "v@v.com",
+    //   hashedPassword:
+    //     "$2a$12$QulFtzyqoOve.o6WMyLwCuzP6aUIfjksEPveRajJpcvcf.ojlGOgK", // LaVictoire
+    //   username: "LaVictoire",
+    //   pseudoname: "Victoria",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Victoria",
+    //   lastNameAnswer: "Spice",
+    // },
+    // {
+    //   // Wilda / oftheWild
+    //   signInEmailAddress: "w@w.com",
+    //   hashedPassword:
+    //     "$2a$12$Y6eTEC/CBKoaZ7ryJDR6PuqxOaES6EZA.GjY8zjxsUb6XUYqo0die", // oftheWild
+    //   username: "oftheWild",
+    //   pseudoname: "Wilda",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Wilda",
+    //   lastNameAnswer: "Wilderness",
+    // },
+    // {
+    //   // Xenobia / ResRevealed
+    //   signInEmailAddress: "x@x.com",
+    //   hashedPassword:
+    //     "$2a$12$v2MeRBz0ncCEBS3WMMDb.emMdjgL2Ep0bptqNRr.tsCiqcfowHsmG", // ResRevealed
+    //   username: "ResRevealed",
+    //   pseudoname: "Xenobia",
+    //   // First name and last name criteria
+    //   firstNameAnswer: "Xenobia",
+    //   lastNameAnswer: "Desistoria",
+    // },
   ];
 
   ///////////////////////////////////////////////////////////////////////////
@@ -280,23 +282,315 @@ async function seed() {
 
   console.log(`Seeding Relations...`);
 
-  await prisma.relation.create({
-    data: {
+  // “me” and Alice / contacts combination "irl" in v2
+
+  const userLePapier = users.find((e) => e.signInEmailAddress === "l@l.me");
+
+  if (!userLePapier)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address l@l.me was not found.`,
+    );
+
+  const userAliceChan = users.find((e) => e.signInEmailAddress === "a@a.com");
+
+  if (!userAliceChan)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address a@a.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userAliceChan.id,
+      },
+    },
+    update: {},
+    create: {
       state: "LIVE",
       isBookmarked: true,
       bookmarkedAt: new Date(),
-      selectingUser: {
-        connect: {
-          username: "LePapier",
-        },
-      },
-      selectedUser: {
-        connect: {
-          username: "Alice-chan",
-        },
-      },
+      selectingUserId: userLePapier.id,
+      selectedUserId: userAliceChan.id,
     },
   });
+
+  // Alice and “me” / contacts combination "irl" in v2
+  // (It is implied that former "irl"s in v2 now bookmark each other in v3.)
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userAliceChan.id,
+        selectedUserId: userLePapier.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectedUserId: userAliceChan.id,
+      selectingUserId: userLePapier.id,
+    },
+  });
+
+  // “me” and Bianca / contacts combination "friend" in v2
+
+  const userTrovounette = users.find((e) => e.signInEmailAddress === "b@b.com");
+
+  if (!userTrovounette)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address b@b.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userTrovounette.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUserId: userLePapier.id,
+      selectedUserId: userTrovounette.id,
+    },
+  });
+
+  // Bianca and “me” / contacts combination "friend" in v2
+  // (It is implied that for former "friend"s in v2, only the first original Contact from v2 now bookmarks the other in v3, further implying that there is no opposite Relation created in v3.)
+
+  // “me” and Candice / contacts combination "none" in v2
+  // (In these seeds, Candice is to be the only former "none" in v2 bookmarked in v3.)
+
+  const userCandi = users.find((e) => e.signInEmailAddress === "c@c.com");
+
+  if (!userCandi)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address c@c.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userCandi.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUserId: userLePapier.id,
+      selectedUserId: userCandi.id,
+    },
+  });
+
+  // Candice and “me” / contacts combination "none" in v2
+  // (It is implied that for former "none"s in v2, only the first original Contact from v2 now bookmarks the other in v3 exclusively in the case of Candice, further implying that there is no opposite Relation created in v3.)
+
+  // “me” and Danny / contacts combination "friend" in v2
+
+  const userDDan = users.find((e) => e.signInEmailAddress === "c@c.com");
+
+  if (!userDDan)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address d@d.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userDDan.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUserId: userLePapier.id,
+      selectedUserId: userDDan.id,
+    },
+  });
+
+  // “me” and Lucas / contacts combination "friend" in v2
+
+  const userLucario = users.find((e) => e.signInEmailAddress === "l@l.com");
+
+  if (!userLucario)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address l@l.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userLucario.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUserId: userLePapier.id,
+      selectedUserId: userLucario.id,
+    },
+  });
+
+  // “me” and Malcolm / contacts combination "irl" in v2
+
+  const userMisterX = users.find((e) => e.signInEmailAddress === "m@m.com");
+
+  if (!userMisterX)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address m@m.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectedUserId: userLePapier.id,
+        selectingUserId: userMisterX.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUserId: userLePapier.id,
+      selectedUserId: userMisterX.id,
+    },
+  });
+
+  // Malcolm and “me” / contacts combination "irl" in v2
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userMisterX.id,
+        selectedUserId: userLePapier.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectedUserId: userMisterX.id,
+      selectingUserId: userLePapier.id,
+    },
+  });
+
+  // “me” and Nancy / contacts combination "i-am-blocking" in v2
+
+  const userNonyes = users.find((e) => e.signInEmailAddress === "n@n.com");
+
+  if (!userNonyes)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address n@n.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userLePapier.id,
+        selectedUserId: userNonyes.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBlocked: true,
+      blockedAt: new Date(),
+      selectedUserId: userLePapier.id,
+      selectingUserId: userNonyes.id,
+    },
+  });
+
+  // “me” and Ophelia / contacts combination "has-me-blocked" in v2
+  // meaning Ophelia and “me” / contacts combination "i-am-blocking"
+
+  const userOpheliaSwan = users.find((e) => e.signInEmailAddress === "o@o.com");
+
+  if (!userOpheliaSwan)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address o@o.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userOpheliaSwan.id,
+        selectedUserId: userLePapier.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBlocked: true,
+      blockedAt: new Date(),
+      selectedUserId: userOpheliaSwan.id,
+      selectingUserId: userLePapier.id,
+    },
+  });
+
+  // “me” and Pamela / relation combination “blocking-and-blocked” in v2
+  // meaning “me” and Pamela / contacts combination "i-am-blocking"...
+
+  const userPimPamPoum = users.find((e) => e.signInEmailAddress === "p@p.com");
+
+  if (!userPimPamPoum)
+    return console.error(
+      `Error: Somehow the user with the sign-in email address p@p.com was not found.`,
+    );
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userLePapier.id,
+        selectedUserId: userPimPamPoum.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBlocked: true,
+      blockedAt: new Date(),
+      selectedUserId: userLePapier.id,
+      selectingUserId: userPimPamPoum.id,
+    },
+  });
+
+  // ...and Pamela and “me” / contacts combination "i-am-blocking"
+
+  await prisma.relation.upsert({
+    where: {
+      selectingUserId_selectedUserId: {
+        selectingUserId: userPimPamPoum.id,
+        selectedUserId: userLePapier.id,
+      },
+    },
+    update: {},
+    create: {
+      state: "LIVE",
+      isBlocked: true,
+      blockedAt: new Date(),
+      selectedUserId: userPimPamPoum.id,
+      selectingUserId: userLePapier.id,
+    },
+  });
+
+  // NOTE: USERS FROM QUENTIN TO XENOBIA ARE CURRENTLY NO LONGER NEEDED AS SEEDS BECAUSE THE FRIEND AND IRL FLOWS ARE REMOVED IN V3.
 
   console.log(`...Relations seeded.`);
 
@@ -591,4 +885,10 @@ At some point even my users.find helper will have to be done once only. It will 
 ...Or just work directly with users instead of usersData.
 ...No. Since I'm using and customizing usersData for conditionality. Like if a user in usersData does not have a firstName, that will not be reflected in Prisma's User.
 Relations (bookmarks and blocks) will be made by hand though.
+I could shorten the relation.upsert into a function. And perhaps do the same for all the other upserts.
+Suggesting turning Relations' state to NONE when a bookmark is removed. (Or a block too, meaning when a Relation becomes stale.)
+Do not confused Relation.isBlocked in v3 and and Contact.isBlocking in v2. They're same and here's the logic: 
+- "The relation I have with you is blocked."
+- "The contact I have with you is blocking."
+Now that mirrors on Relations are truly optional, is there a case to be made for a Relation where selecting and selected are the same users?
 */
