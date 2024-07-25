@@ -242,10 +242,14 @@ async function seed() {
     },
   ];
 
-  console.log(`Seeding users...`);
+  console.log(`Seeding Users...`);
+
+  const users = [];
+
+  console.log(`Seeding all users...`);
 
   for (const userData of usersData) {
-    await prisma.user.upsert({
+    const user = await prisma.user.upsert({
       where: {
         signInEmailAddress: userData.signInEmailAddress,
       },
@@ -258,11 +262,19 @@ async function seed() {
         pseudoname: userData.pseudoname,
       },
     });
+
+    users.push(user);
   }
+
+  console.log(`...All users seeded.`);
+
+  console.log({ users });
 
   console.log(`...Users seeded.`);
 
   console.log(`Seeding Criteria...`);
+
+  const criteria = [];
 
   console.log(`Filtering users data for first names.`);
 
@@ -273,18 +285,32 @@ async function seed() {
   console.log(`Seeding first names criteria...`);
 
   for (const userData of usersDataWithFirstNames) {
-    await prisma.criterion.create({
-      data: {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const criterion = await prisma.criterion.upsert({
+      where: {
+        question_userId: {
+          question: "First name",
+          userId: user.id,
+        },
+      },
+      update: {},
+      create: {
         state: "LIVE",
         question: "First name",
         answer: userData.firstNameAnswer,
-        user: {
-          connect: {
-            signInEmailAddress: userData.signInEmailAddress,
-          },
-        },
+        userId: user.id,
       },
     });
+
+    criteria.push(criterion);
   }
 
   console.log(`...First names criteria seeded.`);
@@ -298,25 +324,43 @@ async function seed() {
   console.log(`Seeding last names criteria...`);
 
   for (const userData of usersDataWithLastNames) {
-    await prisma.criterion.create({
-      data: {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const criterion = await prisma.criterion.upsert({
+      where: {
+        question_userId: {
+          question: "Last name",
+          userId: user.id,
+        },
+      },
+      update: {},
+      create: {
         state: "LIVE",
         question: "Last name",
         answer: userData.lastNameAnswer,
-        user: {
-          connect: {
-            signInEmailAddress: userData.signInEmailAddress,
-          },
-        },
+        userId: user.id,
       },
     });
+
+    criteria.push(criterion);
   }
 
   console.log(`...Last names criteria seeded.`);
 
+  console.log({ criteria });
+
   console.log(`...Criteria seeded.`);
 
   console.log(`Seeding GroupsOfCriteria...`);
+
+  const groupsOfCriteria = [];
 
   console.log(`Filtering users data for first names last names.`);
 
@@ -324,20 +368,178 @@ async function seed() {
     (e) => e.firstNameAnswer !== undefined && e.lastNameAnswer !== undefined,
   );
 
+  console.log(`Seeding "Names"' GroupsOfCriteria...`);
+
   for (const userData of usersDataWithFirstNamesLastNames) {
-    await prisma.groupOfCriteria.create({
-      data: {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = await prisma.groupOfCriteria.upsert({
+      where: {
+        name_creatorUserId: {
+          name: "Names",
+          creatorUserId: user.id,
+        },
+      },
+      update: {},
+      create: {
         state: "LIVE",
         name: "Names",
         description: "My first name, last name and other names.",
-        creatorUser: {
+        creatorUserId: user.id,
+      },
+    });
+
+    groupsOfCriteria.push(groupOfCriteria);
+  }
+
+  console.log(`..."Names"' GroupsOfCriteria seeded.`);
+
+  console.log({ groupsOfCriteria });
+
+  console.log(`...GroupsOfCriteria seeded.`);
+
+  console.log(`Seeding GroupOfCriteriaCriteria...`);
+
+  console.log(
+    `Seeding "Names"' GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria...`,
+  );
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = groupsOfCriteria.find(
+      (e) => e.creatorUserId === user.id && e.name === "Names",
+    );
+
+    if (!groupOfCriteria)
+      return console.error(
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+      );
+
+    const criterion = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterion)
+      return console.error(
+        `Somehow the criterion with the user ID of ${user.username} and the question "First name" was not found.`,
+      );
+
+    await prisma.groupOfCriteriaCriterion.upsert({
+      where: {
+        groupOfCriteriaId_criterionId: {
+          groupOfCriteriaId: groupOfCriteria.id,
+          criterionId: criterion.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        groupOfCriteria: {
           connect: {
-            signInEmailAddress: userData.signInEmailAddress,
+            name_creatorUserId: {
+              name: "Names",
+              creatorUserId: user.id,
+            },
+          },
+        },
+        criterion: {
+          connect: {
+            question_userId: {
+              question: "First name",
+              userId: user.id,
+            },
           },
         },
       },
     });
   }
+
+  console.log(
+    `..."Names"' GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria seeded.`,
+  );
+
+  console.log(
+    `Seeding "Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria...`,
+  );
+
+  for (const userData of usersDataWithLastNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = groupsOfCriteria.find(
+      (e) => e.creatorUserId === user.id && e.name === "Names",
+    );
+
+    if (!groupOfCriteria)
+      return console.error(
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+      );
+
+    const criterion = criteria.find(
+      (e) => e.userId === user.id && e.question === "Last name",
+    );
+
+    if (!criterion)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question "Last name" was not found.`,
+      );
+
+    await prisma.groupOfCriteriaCriterion.upsert({
+      where: {
+        groupOfCriteriaId_criterionId: {
+          groupOfCriteriaId: groupOfCriteria.id,
+          criterionId: criterion.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        groupOfCriteria: {
+          connect: {
+            name_creatorUserId: {
+              name: "Names",
+              creatorUserId: user.id,
+            },
+          },
+        },
+        criterion: {
+          connect: {
+            question_userId: {
+              question: "Last name",
+              userId: user.id,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  console.log(
+    `..."Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria seeded.`,
+  );
+
+  console.log(`...GroupOfCriteriaCriteria seeded.`);
 
   console.log(`...Initial seeds complete.`);
 }
@@ -346,4 +548,10 @@ seed();
 
 /* Notes
 Upsert has this awesome feature that when update is empty, even the createdAt field is left untouched.
+...
+Connects can't be nested. So I'm going to need within the seeds process to save as variables all the seeds I create so that I can reused them later on with .find and other array methods.
+At some point even my users.find helper will have to be done once only. It will come during refactoring but essentially all everything that is strictly like to a user will be done via that user in a for loop of users.
+...Or I can do an input-output on usersData.
+...Or just work directly with users instead of usersData.
+...No. Since I'm using and customizing usersData for conditionality. Like if a user in usersData does not have a firstName, that will not be reflected in Prisma's User.
 */

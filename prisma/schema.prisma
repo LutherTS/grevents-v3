@@ -130,6 +130,8 @@ model GroupOfUsersUser {
 
   userId                         String
   user                           User                      @relation(fields: [userId], references: [id])
+
+  @@unique([groupOfUsersId, userId])
 }
 
 // common Group base for Criteria
@@ -169,6 +171,8 @@ model GroupOfCriteriaCriterion {
 
   criterionId                    String
   criterion                      Criterion                 @relation(fields: [criterionId], references: [id])
+
+  @@unique([groupOfCriteriaId, criterionId])
 
   usersGroupOfCriteriaCriterion  UserGroupOfCriteriaCriterion[]
 }
