@@ -21,7 +21,7 @@ model User {
   statusGroupsOfUsers            String                    @default("NONE")
   statusGroupsOfCriteria         String                    @default("NONE")
 
-  emailAddress                   String                    @unique
+  signInEmailAddress             String                    @unique
   hashedPassword                 String
   username                       String                    @unique
   pseudoname                     String
