@@ -3,6 +3,8 @@ import prisma from "./db";
 async function seed() {
   console.log(`Beginning initial seeds...`);
 
+  ///////////////////////////////////////////////////////////////////////////
+
   console.log(`Creating users data.`);
 
   const usersData = [
@@ -242,11 +244,13 @@ async function seed() {
     },
   ];
 
+  ///////////////////////////////////////////////////////////////////////////
+
   console.log(`Seeding Users...`);
 
   const users = [];
 
-  console.log(`Seeding all users...`);
+  console.log(`Seeding all Users...`);
 
   for (const userData of usersData) {
     const user = await prisma.user.upsert({
@@ -266,11 +270,37 @@ async function seed() {
     users.push(user);
   }
 
-  console.log(`...All users seeded.`);
+  console.log(`...All Users seeded.`);
 
   console.log({ users });
 
   console.log(`...Users seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  console.log(`Seeding Relations...`);
+
+  await prisma.relation.create({
+    data: {
+      state: "LIVE",
+      isBookmarked: true,
+      bookmarkedAt: new Date(),
+      selectingUser: {
+        connect: {
+          username: "LePapier",
+        },
+      },
+      selectedUser: {
+        connect: {
+          username: "Alice-chan",
+        },
+      },
+    },
+  });
+
+  console.log(`...Relations seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
 
   console.log(`Seeding Criteria...`);
 
@@ -282,7 +312,7 @@ async function seed() {
     (e) => e.firstNameAnswer !== undefined,
   );
 
-  console.log(`Seeding first names criteria...`);
+  console.log(`Seeding first names Criteria...`);
 
   for (const userData of usersDataWithFirstNames) {
     const user = users.find(
@@ -313,7 +343,7 @@ async function seed() {
     criteria.push(criterion);
   }
 
-  console.log(`...First names criteria seeded.`);
+  console.log(`...First names Criteria seeded.`);
 
   console.log(`Filtering users data for last names.`);
 
@@ -321,7 +351,7 @@ async function seed() {
     (e) => e.lastNameAnswer !== undefined,
   );
 
-  console.log(`Seeding last names criteria...`);
+  console.log(`Seeding last names Criteria...`);
 
   for (const userData of usersDataWithLastNames) {
     const user = users.find(
@@ -352,11 +382,13 @@ async function seed() {
     criteria.push(criterion);
   }
 
-  console.log(`...Last names criteria seeded.`);
+  console.log(`...Last names Criteria seeded.`);
 
   console.log({ criteria });
 
   console.log(`...Criteria seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
 
   console.log(`Seeding GroupsOfCriteria...`);
 
@@ -404,6 +436,8 @@ async function seed() {
   console.log({ groupsOfCriteria });
 
   console.log(`...GroupsOfCriteria seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
 
   console.log(`Seeding GroupOfCriteriaCriteria...`);
 
@@ -541,6 +575,8 @@ async function seed() {
 
   console.log(`...GroupOfCriteriaCriteria seeded.`);
 
+  ///////////////////////////////////////////////////////////////////////////
+
   console.log(`...Initial seeds complete.`);
 }
 
@@ -554,4 +590,5 @@ At some point even my users.find helper will have to be done once only. It will 
 ...Or I can do an input-output on usersData.
 ...Or just work directly with users instead of usersData.
 ...No. Since I'm using and customizing usersData for conditionality. Like if a user in usersData does not have a firstName, that will not be reflected in Prisma's User.
+Relations (bookmarks and blocks) will be made by hand though.
 */
