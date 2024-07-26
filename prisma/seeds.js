@@ -1150,6 +1150,54 @@ async function seed() {
 
   console.log(`..."Names"' GroupsOfCriteria seeded.`);
 
+  console.log(`Seeding "First Names"' Mono-GroupsOfCriteria...`);
+
+  // NOTE: WHAT DIFFERENTIATES A MONOGROUPOFCRITERIA FROM A GROUPOFCRITERIA
+  // - automatic name: the name is the question of the criteria
+  // - automatic description: the description is dynamic from the question of the criteria (${question} is its own mono-group of criteria) or just mono, or even just no description at all. (To be decided on the frontend.)
+  // - monoCriterion or monoCriterionId is filled.
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const criterionFirstName = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterionFirstName)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupsOfCriteria.push(
+      await prisma.groupOfCriteria.upsert({
+        where: {
+          name_creatorUserId: {
+            name: criterionFirstName.question,
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          name: criterionFirstName.question,
+          description: `${criterionFirstName.question} – as its own mono-group of criteria.`,
+          creatorUserId: user.id,
+          monoCriterionId: criterionFirstName.id,
+        },
+      }),
+    );
+  }
+
+  console.log(`..."First Names"' Mono-GroupsOfCriteria seeded.`);
+
   console.log({ groupsOfCriteria });
 
   console.log(`...GroupsOfCriteria seeded.`);
@@ -1180,7 +1228,7 @@ async function seed() {
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -1189,7 +1237,7 @@ async function seed() {
 
     if (!criterion)
       return console.error(
-        `Somehow the criterion with the user ID of ${user.username} and the question "First name" was not found.`,
+        `Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
@@ -1248,7 +1296,7 @@ async function seed() {
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -1257,7 +1305,7 @@ async function seed() {
 
     if (!criterion)
       return console.error(
-        `Error: Somehow the criterion with the user ID of ${user.username} and the question "Last name" was not found.`,
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question Last name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
@@ -1294,6 +1342,74 @@ async function seed() {
 
   console.log(
     `..."Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria seeded.`,
+  );
+
+  console.log(
+    `Seeding "First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria...`,
+  );
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = groupsOfCriteria.find(
+      (e) => e.creatorUserId === user.id && e.name === "First name",
+    );
+
+    if (!groupOfCriteria)
+      return console.error(
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name First name was not found.`,
+      );
+
+    const criterion = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterion)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupOfCriteriaCriteria.push(
+      await prisma.groupOfCriteriaCriterion.upsert({
+        where: {
+          groupOfCriteriaId_criterionId: {
+            groupOfCriteriaId: groupOfCriteria.id,
+            criterionId: criterion.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfCriteria: {
+            connect: {
+              name_creatorUserId: {
+                name: "First name",
+                creatorUserId: user.id,
+              },
+            },
+          },
+          criterion: {
+            connect: {
+              question_userId: {
+                question: "First name",
+                userId: user.id,
+              },
+            },
+          },
+        },
+      }),
+    );
+  }
+
+  console.log(
+    `..."First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria seeded.`,
   );
 
   console.log({ groupOfCriteriaCriteria });
@@ -2011,6 +2127,341 @@ https://remix.run/docs/en/main/tutorials/jokes
   console.log({ groupsOfUsers });
 
   console.log(`...GroupsOfUsers seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  console.log(`Seeding GroupOfUsersUsers...`);
+
+  const groupOfUsersUsers = [];
+
+  // “me” and Alice / contacts combination "irl" in v2
+
+  const groupOfUsersLePapierFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userLePapier.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersLePapierFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userLePapier.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierFriends.id,
+          userId: userAliceChan.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierFriends.id,
+        userId: userAliceChan.id,
+      },
+    }),
+  );
+
+  const groupOfUsersLePapierIrls = groupsOfUsers.find(
+    (e) => e.creatorUserId === userLePapier.id && e.name === "IRLs",
+  );
+
+  if (!groupOfUsersLePapierIrls)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userLePapier.username} and the name IRLs was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierIrls.id,
+          userId: userAliceChan.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierIrls.id,
+        userId: userAliceChan.id,
+      },
+    }),
+  );
+
+  // Alice and “me” / contacts combination "irl" in v2
+
+  const groupOfUsersAliceChanFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userAliceChan.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersAliceChanFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userAliceChan.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersAliceChanFriends.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersAliceChanFriends.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  const groupOfUsersAliceChanIrls = groupsOfUsers.find(
+    (e) => e.creatorUserId === userAliceChan.id && e.name === "IRLs",
+  );
+
+  if (!groupOfUsersAliceChanIrls)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userAliceChan.username} and the name IRLs was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersAliceChanIrls.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersAliceChanIrls.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  // “me” and Bianca / contacts combination "friend" in v2
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierFriends.id,
+          userId: userTrovounette.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierFriends.id,
+        userId: userTrovounette.id,
+      },
+    }),
+  );
+
+  // Bianca and “me” / contacts combination "friend" in v2
+
+  const groupOfUsersTrovounetteFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userTrovounette.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersTrovounetteFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userTrovounette.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersTrovounetteFriends.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersTrovounetteFriends.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  // “me” and Danny / contacts combination "friend" in v2
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierFriends.id,
+          userId: userDDan.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierFriends.id,
+        userId: userDDan.id,
+      },
+    }),
+  );
+
+  // Danny and “me” / contacts combination "friend" in v2
+
+  const groupOfUsersDDanFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userDDan.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersDDanFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userDDan.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersDDanFriends.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersDDanFriends.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  // “me” and Lucas / contacts combination "friend" in v2
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierFriends.id,
+          userId: userLucario.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierFriends.id,
+        userId: userLucario.id,
+      },
+    }),
+  );
+
+  // Lucas and “me” / contacts combination "friend" in v2
+
+  const groupOfUsersLucarioFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userLucario.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersLucarioFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userLucario.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLucarioFriends.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLucarioFriends.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  // “me” and Malcolm / contacts combination "irl" in v2
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierFriends.id,
+          userId: userMisterX.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierFriends.id,
+        userId: userMisterX.id,
+      },
+    }),
+  );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersLePapierIrls.id,
+          userId: userMisterX.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersLePapierIrls.id,
+        userId: userMisterX.id,
+      },
+    }),
+  );
+
+  // Malcolm and “me” / contacts combination "irl" in v2
+
+  const groupOfUsersMisterXFriends = groupsOfUsers.find(
+    (e) => e.creatorUserId === userMisterX.id && e.name === "Friends",
+  );
+
+  if (!groupOfUsersMisterXFriends)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userMisterX.username} and the name Friends was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersMisterXFriends.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersMisterXFriends.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  const groupOfUsersMisterXIrls = groupsOfUsers.find(
+    (e) => e.creatorUserId === userMisterX.id && e.name === "IRLs",
+  );
+
+  if (!groupOfUsersMisterXIrls)
+    return console.error(
+      `Error: Somehow the group of users with the creator ID of ${userMisterX.username} and the name IRLs was not found.`,
+    );
+
+  groupOfUsersUsers.push(
+    await prisma.groupOfUsersUser.upsert({
+      where: {
+        groupOfUsersId_userId: {
+          groupOfUsersId: groupOfUsersMisterXIrls.id,
+          userId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        groupOfUsersId: groupOfUsersMisterXIrls.id,
+        userId: userLePapier.id,
+      },
+    }),
+  );
+
+  console.log({ groupOfUsersUsers });
+
+  console.log(`...GroupOfUsersUsers seeded.`);
 
   ///////////////////////////////////////////////////////////////////////////
 
