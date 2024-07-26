@@ -678,6 +678,8 @@ async function seed() {
 
   console.log(`..."IRLs"' GroupsOfUsers seeded.`);
 
+  console.log({ groupsOfUsers });
+
   console.log(`...GroupsOfUsers seeded.`);
 
   ///////////////////////////////////////////////////////////////////////////
