@@ -1344,6 +1344,74 @@ async function seed() {
     `..."Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria seeded.`,
   );
 
+  console.log(
+    `Seeding "First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria...`,
+  );
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = groupsOfCriteria.find(
+      (e) => e.creatorUserId === user.id && e.name === "First name",
+    );
+
+    if (!groupOfCriteria)
+      return console.error(
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name First name was not found.`,
+      );
+
+    const criterion = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterion)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupOfCriteriaCriteria.push(
+      await prisma.groupOfCriteriaCriterion.upsert({
+        where: {
+          groupOfCriteriaId_criterionId: {
+            groupOfCriteriaId: groupOfCriteria.id,
+            criterionId: criterion.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfCriteria: {
+            connect: {
+              name_creatorUserId: {
+                name: "First name",
+                creatorUserId: user.id,
+              },
+            },
+          },
+          criterion: {
+            connect: {
+              question_userId: {
+                question: "First name",
+                userId: user.id,
+              },
+            },
+          },
+        },
+      }),
+    );
+  }
+
+  console.log(
+    `..."First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria seeded.`,
+  );
+
   console.log({ groupOfCriteriaCriteria });
 
   console.log(`...GroupOfCriteriaCriteria seeded.`);
