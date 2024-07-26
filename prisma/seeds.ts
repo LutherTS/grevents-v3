@@ -716,7 +716,7 @@ async function seed() {
   );
 
   const groupOfUsersLePapierIrls = groupsOfUsers.find(
-    (e) => e.creatorUserId === userLePapier.id && e.name === "Irls",
+    (e) => e.creatorUserId === userLePapier.id && e.name === "IRLs",
   );
 
   if (!groupOfUsersLePapierIrls)
@@ -756,19 +756,19 @@ async function seed() {
       where: {
         groupOfUsersId_userId: {
           groupOfUsersId: groupOfUsersAliceChanFriends.id,
-          userId: userAliceChan.id,
+          userId: userLePapier.id,
         },
       },
       update: {},
       create: {
         groupOfUsersId: groupOfUsersAliceChanFriends.id,
-        userId: userAliceChan.id,
+        userId: userLePapier.id,
       },
     }),
   );
 
   const groupOfUsersAliceChanIrls = groupsOfUsers.find(
-    (e) => e.creatorUserId === userAliceChan.id && e.name === "Irls",
+    (e) => e.creatorUserId === userAliceChan.id && e.name === "IRLs",
   );
 
   if (!groupOfUsersAliceChanIrls)
@@ -781,7 +781,7 @@ async function seed() {
       where: {
         groupOfUsersId_userId: {
           groupOfUsersId: groupOfUsersAliceChanIrls.id,
-          userId: userAliceChan.id,
+          userId: userLePapier.id,
         },
       },
       update: {},
@@ -989,7 +989,7 @@ async function seed() {
   );
 
   const groupOfUsersMisterXIrls = groupsOfUsers.find(
-    (e) => e.creatorUserId === userMisterX.id && e.name === "Irls",
+    (e) => e.creatorUserId === userMisterX.id && e.name === "IRLs",
   );
 
   if (!groupOfUsersMisterXIrls)
