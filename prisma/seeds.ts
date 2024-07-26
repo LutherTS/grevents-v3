@@ -1436,7 +1436,10 @@ async function seed() {
         e.name === "Friends",
     );
 
-    if (!groupOfUsersFriends) return;
+    if (!groupOfUsersFriends)
+      return console.error(
+        `Error: Somehow ${userWithFirstNames ? userWithFirstNames.username : "somebody"}'s group of users named Friends was not found.`,
+      );
 
     const groupOfCriteriaFirstName = groupsOfCriteria.find(
       (e) =>
@@ -1445,7 +1448,10 @@ async function seed() {
         e.name === "First name",
     );
 
-    if (!groupOfCriteriaFirstName) return;
+    if (!groupOfCriteriaFirstName)
+      return console.error(
+        `Error: Somehow ${userWithFirstNames ? userWithFirstNames.username : "somebody"}'s group of criteria named First name was not found.`,
+      );
 
     groupOfUsersGroupsOfCriteria.push(
       await prisma.groupOfUsersGroupOfCriteria.upsert({
@@ -1487,7 +1493,10 @@ async function seed() {
         e.name === "IRLs",
     );
 
-    if (!groupOfUsersIrls) return;
+    if (!groupOfUsersIrls)
+      return console.error(
+        `Error: Somehow ${userWithFirstNamesLastNames ? userWithFirstNamesLastNames.username : "somebody"}'s group of users named IRLs was not found.`,
+      );
 
     const groupOfCriteriaFirstName = groupsOfCriteria.find(
       (e) =>
@@ -1496,7 +1505,10 @@ async function seed() {
         e.name === "First name",
     );
 
-    if (!groupOfCriteriaFirstName) return;
+    if (!groupOfCriteriaFirstName)
+      return console.error(
+        `Error: Somehow ${userWithFirstNamesLastNames ? userWithFirstNamesLastNames.username : "somebody"}'s group of criteria named First name was not found.`,
+      );
 
     groupOfUsersGroupsOfCriteria.push(
       await prisma.groupOfUsersGroupOfCriteria.upsert({
@@ -1522,7 +1534,10 @@ async function seed() {
         e.name === "Names",
     );
 
-    if (!groupOfCriteriaNames) return;
+    if (!groupOfCriteriaNames)
+      return console.error(
+        `Error: Somehow ${userWithFirstNamesLastNames ? userWithFirstNamesLastNames.username : "somebody"}'s group of criteria named Names was not found.`,
+      );
 
     groupOfUsersGroupsOfCriteria.push(
       await prisma.groupOfUsersGroupOfCriteria.upsert({
