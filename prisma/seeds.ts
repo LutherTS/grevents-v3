@@ -1561,6 +1561,8 @@ async function seed() {
     `..."IRLs"' GroupsOfUsers' GroupsOfCriteria – GroupOfUsersGroupOfCriteria seeded.`,
   );
 
+  console.log({ groupOfUsersGroupsOfCriteria });
+
   console.log(`...GroupOfUsersGroupOfCriteria seeded.`);
 
   ///////////////////////////////////////////////////////////////////////////
