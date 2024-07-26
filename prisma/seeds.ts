@@ -1150,6 +1150,54 @@ async function seed() {
 
   console.log(`..."Names"' GroupsOfCriteria seeded.`);
 
+  console.log(`Seeding "First Names"' Mono-GroupsOfCriteria...`);
+
+  // NOTE: WHAT DIFFERENTIATES A MONOGROUPOFCRITERIA FROM A GROUPOFCRITERIA
+  // - automatic name: the name is the question of the criteria
+  // - automatic description: the description is dynamic from the question of the criteria (${question} is its own mono-group of criteria) or just mono, or even just no description at all. (To be decided on the frontend.)
+  // - monoCriterion or monoCriterionId is filled.
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const criterionFirstName = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterionFirstName)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupsOfCriteria.push(
+      await prisma.groupOfCriteria.upsert({
+        where: {
+          name_creatorUserId: {
+            name: criterionFirstName.question,
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          name: criterionFirstName.question,
+          description: `${criterionFirstName.question} – as its own mono-group of criteria.`,
+          creatorUserId: user.id,
+          monoCriterionId: criterionFirstName.id,
+        },
+      }),
+    );
+  }
+
+  console.log(`..."First Names"' Mono-GroupsOfCriteria seeded.`);
+
   console.log({ groupsOfCriteria });
 
   console.log(`...GroupsOfCriteria seeded.`);
@@ -1180,7 +1228,7 @@ async function seed() {
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -1189,7 +1237,7 @@ async function seed() {
 
     if (!criterion)
       return console.error(
-        `Somehow the criterion with the user ID of ${user.username} and the question "First name" was not found.`,
+        `Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
@@ -1248,7 +1296,7 @@ async function seed() {
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -1257,7 +1305,7 @@ async function seed() {
 
     if (!criterion)
       return console.error(
-        `Error: Somehow the criterion with the user ID of ${user.username} and the question "Last name" was not found.`,
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question Last name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
