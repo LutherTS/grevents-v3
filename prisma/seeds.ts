@@ -252,27 +252,25 @@ async function seed() {
 
   console.log(`Seeding Users...`);
 
-  const users = [];
-
   console.log(`Seeding all Users...`);
 
-  for (const userData of usersData) {
-    const user = await prisma.user.upsert({
-      where: {
-        signInEmailAddress: userData.signInEmailAddress,
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        signInEmailAddress: userData.signInEmailAddress,
-        hashedPassword: userData.hashedPassword,
-        username: userData.username,
-        pseudoname: userData.pseudoname,
-      },
-    });
-
-    users.push(user);
-  }
+  const users = await Promise.all(
+    usersData.map(async (userData) => {
+      return await prisma.user.upsert({
+        where: {
+          signInEmailAddress: userData.signInEmailAddress,
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          signInEmailAddress: userData.signInEmailAddress,
+          hashedPassword: userData.hashedPassword,
+          username: userData.username,
+          pseudoname: userData.pseudoname,
+        },
+      });
+    }),
+  );
 
   console.log(`...All Users seeded.`);
 
@@ -633,23 +631,23 @@ async function seed() {
   console.log(`Seeding "Friends"' GroupsOfUsers...`);
 
   for (const user of users) {
-    const groupOfUsers = await prisma.groupOfUsers.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfUsers.push(
+      await prisma.groupOfUsers.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "Friends",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "Friends",
+          description: "My friends, including IRLs, exactly like in v2.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "Friends",
-        description: "My friends, including IRLs, exactly like in v2.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfUsers.push(groupOfUsers);
+      }),
+    );
   }
 
   console.log(`..."Friends"' GroupsOfUsers seeded.`);
@@ -657,23 +655,23 @@ async function seed() {
   console.log(`Seeding "IRLs"' GroupsOfUsers...`);
 
   for (const user of users) {
-    const groupOfUsers = await prisma.groupOfUsers.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfUsers.push(
+      await prisma.groupOfUsers.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "IRLs",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "IRLs",
+          description: "My IRLs, excluding friends, exactly like in v2.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "IRLs",
-        description: "My IRLs, excluding friends, exactly like in v2.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfUsers.push(groupOfUsers);
+      }),
+    );
   }
 
   console.log(`..."IRLs"' GroupsOfUsers seeded.`);
@@ -1041,23 +1039,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const criterion = await prisma.criterion.upsert({
-      where: {
-        question_userId: {
+    criteria.push(
+      await prisma.criterion.upsert({
+        where: {
+          question_userId: {
+            question: "First name",
+            userId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           question: "First name",
+          answer: userData.firstNameAnswer,
           userId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        question: "First name",
-        answer: userData.firstNameAnswer,
-        userId: user.id,
-      },
-    });
-
-    criteria.push(criterion);
+      }),
+    );
   }
 
   console.log(`...First names Criteria seeded.`);
@@ -1080,23 +1078,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const criterion = await prisma.criterion.upsert({
-      where: {
-        question_userId: {
+    criteria.push(
+      await prisma.criterion.upsert({
+        where: {
+          question_userId: {
+            question: "Last name",
+            userId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           question: "Last name",
+          answer: userData.lastNameAnswer,
           userId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        question: "Last name",
-        answer: userData.lastNameAnswer,
-        userId: user.id,
-      },
-    });
-
-    criteria.push(criterion);
+      }),
+    );
   }
 
   console.log(`...Last names Criteria seeded.`);
@@ -1129,23 +1127,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const groupOfCriteria = await prisma.groupOfCriteria.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfCriteria.push(
+      await prisma.groupOfCriteria.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "Names",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "Names",
+          description: "My first name, last name and other names.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "Names",
-        description: "My first name, last name and other names.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfCriteria.push(groupOfCriteria);
+      }),
+    );
   }
 
   console.log(`..."Names"' GroupsOfCriteria seeded.`);
