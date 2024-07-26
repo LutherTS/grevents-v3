@@ -1681,5 +1681,7 @@ const users = await Promise.all(
     }),
   );
 It looks cool, and it's faster, but that exactly the issue. It doesn't prevents users from being organized by createdAt since all creating were pretty much fired at the same time and therefore have the same timestamp.
-Just a heads-up, the issue I had with connecting pinningUser was because it was only in create, not in update, so since the entry already existed it couldn't be updated accordingly;
+Just a heads-up, the issue I had with connecting pinningUser was because it was only in create, not in update, so since the entry already existed it couldn't be updated accordingly.
+...
+And it all works now, I can move on to other things.
 */
