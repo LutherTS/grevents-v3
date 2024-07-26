@@ -21,7 +21,7 @@ model User {
   statusGroupsOfUsers            String                    @default("NONE")
   statusGroupsOfCriteria         String                    @default("NONE")
 
-  emailAddress                   String                    @unique
+  signInEmailAddress             String                    @unique
   hashedPassword                 String
   username                       String                    @unique
   pseudoname                     String
@@ -46,7 +46,7 @@ model User {
 
   groupsOfCriteria               GroupOfCriteria[]
 
-  userGroupOfCriteriaCriteria    UserGroupOfCriteriaCriterion[]
+  userCriteria                   UserCriterion[]
 }
 
 model Relation {
@@ -67,28 +67,11 @@ model Relation {
   selectingUser                  User                      @relation("SelectingUser", fields: [selectingUserId], references: [id])
 
   selectedUserId                 String                    @map("selectedUserId")
-  selectedUser                   User                      @relation("SelectedUser", fields: [selectedUserId], references: [id])  
+  selectedUser                   User                      @relation("SelectedUser", fields: [selectedUserId], references: [id])
+
+  @@unique([selectingUserId, selectedUserId])
 
   pinningUser                    User?                     @relation("PinnedRelation")
-}
-
-model Criterion {
-  id                             String                    @id @default(uuid())
-  state                          String                    @default("NONE")
-
-  question                       String
-  answer                         String
-  source                         String?
-
-  createdAt                      DateTime                  @default(now())
-  updatedAt                      DateTime                  @updatedAt @default(now())
-
-  userId                         String
-  user                           User                      @relation(fields: [userId], references: [id])
-
-  monoCriterionGroups            GroupOfCriteria[] 
-
-  groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]
 }
 
 // common Group base for Users
@@ -106,8 +89,10 @@ model GroupOfUsers {
   creatorUserId                  String
   creatorUser                    User                      @relation("GroupOfUsersCreatorUser", fields: [creatorUserId], references: [id])
 
-  monoUserId                     String
-  monoUser                       User                      @relation("MonoUser", fields: [monoUserId], references: [id])
+  @@unique([name, creatorUserId])
+
+  monoUserId                     String?
+  monoUser                       User?                      @relation("MonoUser", fields: [monoUserId], references: [id])
 
   groupOfUsersUsers              GroupOfUsersUser[]
 
@@ -126,6 +111,31 @@ model GroupOfUsersUser {
 
   userId                         String
   user                           User                      @relation(fields: [userId], references: [id])
+
+  @@unique([groupOfUsersId, userId])
+}
+
+model Criterion {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  question                       String
+  answer                         String
+  source                         String?
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  userId                         String
+  user                           User                      @relation(fields: [userId], references: [id])
+
+  @@unique([question, userId])
+
+  monoCriterionGroups            GroupOfCriteria[] 
+
+  groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]
+
+  userCriteria                   UserCriterion[]
 }
 
 // common Group base for Criteria
@@ -143,8 +153,10 @@ model GroupOfCriteria {
   creatorUserId                  String
   creatorUser                    User                      @relation(fields: [creatorUserId], references: [id])
 
-  monoCriterionId                String
-  monoCriterion                  Criterion                 @relation(fields: [monoCriterionId], references: [id])
+  @@unique([name, creatorUserId])
+
+  monoCriterionId                String?
+  monoCriterion                  Criterion?                 @relation(fields: [monoCriterionId], references: [id])
 
   groupOfCriteriaCriteria        GroupOfCriteriaCriterion[]
 
@@ -164,7 +176,7 @@ model GroupOfCriteriaCriterion {
   criterionId                    String
   criterion                      Criterion                 @relation(fields: [criterionId], references: [id])
 
-  usersGroupOfCriteriaCriterion  UserGroupOfCriteriaCriterion[]
+  @@unique([groupOfCriteriaId, criterionId])
 }
 
 model GroupOfUsersGroupOfCriteria {
@@ -179,9 +191,11 @@ model GroupOfUsersGroupOfCriteria {
 
   groupOfCriteriaId              String
   groupOfCriteria                GroupOfCriteria           @relation(fields: [groupOfCriteriaId], references: [id])
+
+  @@unique([groupOfUsersId, groupOfCriteriaId])
 }
 
-model UserGroupOfCriteriaCriterion {
+model UserCriterion {
   id                             String                    @id @default(uuid())
   state                          String                    @default("NONE")
 
@@ -200,8 +214,10 @@ model UserGroupOfCriteriaCriterion {
   userId                         String
   user                           User                      @relation(fields: [userId], references: [id])
 
-  groupOfCriteriaCriterionId     String
-  groupOfCriteriaCriterion       GroupOfCriteriaCriterion  @relation(fields: [groupOfCriteriaCriterionId], references: [id])
+  criterionId                    String
+  criterion                      Criterion  @relation(fields: [criterionId], references: [id])
+
+  @@unique([userId, criterionId])
 }
 
 // Notes
@@ -209,3 +225,7 @@ model UserGroupOfCriteriaCriterion {
 // I want to enforce descriptions on GroupOfUsers so that when creating a group, a user has to explain why they have created this group. Therefore same goes for GroupOfCriteria.
 // No limits to pinning this time, because criteria pinned will be shown both on top and at the bottom of a profile, given that they will be shown at the bottom in the context of a group.
 // Therefore, while there would be limits to pins allowed, the limits will be in pinned shown. I could be imperative to then light a pin in a different color if it is bound to not be shown where it is pinned as it is beyond the limit. (Say the limit is 8, the latest criteria is the 9th, then the oldest up to the latest 8 will no longer be visible in that pinning context.)
+
+// I think I can do await with some the GroupOfCriteriaCriterion joint table through Prisma. ...No, since I need it for UserGroupOfCriteriaCriterion, which is the basis of my pin system.
+
+// I could add a mirror Relation on the relation table, this time optional. This will both combine flexibility through optionality, and the convience of doing only one database call just like in v2. 
