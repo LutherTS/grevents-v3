@@ -246,6 +246,8 @@ async function seed() {
     // },
   ];
 
+  console.log({ usersData });
+
   ///////////////////////////////////////////////////////////////////////////
 
   console.log(`Seeding Users...`);
@@ -282,6 +284,8 @@ async function seed() {
 
   console.log(`Seeding Relations...`);
 
+  const relations = [];
+
   // “me” and Alice / contacts combination "irl" in v2
 
   const userLePapier = users.find((e) => e.signInEmailAddress === "l@l.me");
@@ -298,42 +302,46 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address a@a.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userAliceChan.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userAliceChan.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userAliceChan.id,
-    },
-  });
+    }),
+  );
 
   // Alice and “me” / contacts combination "irl" in v2
   // (It is implied that former "irl"s in v2 now bookmark each other in v3.)
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userAliceChan.id,
+          selectedUserId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userAliceChan.id,
         selectedUserId: userLePapier.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userAliceChan.id,
-      selectedUserId: userLePapier.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Bianca / contacts combination "friend" in v2
 
@@ -344,22 +352,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address b@b.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userTrovounette.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userTrovounette.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userTrovounette.id,
-    },
-  });
+    }),
+  );
 
   // Bianca and “me” / contacts combination "friend" in v2
   // (It is implied that for former "friend"s in v2, only the first original Contact from v2 now bookmarks the other in v3, further implying that there is no opposite Relation created in v3.)
@@ -374,22 +384,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address c@c.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userCandi.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userCandi.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userCandi.id,
-    },
-  });
+    }),
+  );
 
   // Candice and “me” / contacts combination "none" in v2
   // (It is implied that for former "none"s in v2, only the first original Contact from v2 now bookmarks the other in v3 exclusively in the case of Candice, further implying that there is no opposite Relation created in v3.)
@@ -403,22 +415,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address d@d.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userDDan.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userDDan.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userDDan.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Lucas / contacts combination "friend" in v2
 
@@ -429,22 +443,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address l@l.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userLucario.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userLucario.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userLucario.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Malcolm / contacts combination "irl" in v2
 
@@ -455,41 +471,45 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address m@m.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userMisterX.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userMisterX.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userMisterX.id,
-    },
-  });
+    }),
+  );
 
   // Malcolm and “me” / contacts combination "irl" in v2
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userMisterX.id,
+          selectedUserId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBookmarked: true,
+        bookmarkedAt: new Date(),
         selectingUserId: userMisterX.id,
         selectedUserId: userLePapier.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBookmarked: true,
-      bookmarkedAt: new Date(),
-      selectingUserId: userMisterX.id,
-      selectedUserId: userLePapier.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Nancy / contacts combination "i-am-blocking" in v2
 
@@ -500,22 +520,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address n@n.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userNonyes.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBlocked: true,
+        blockedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userNonyes.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBlocked: true,
-      blockedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userNonyes.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Ophelia / contacts combination "has-me-blocked" in v2
   // meaning Ophelia and “me” / contacts combination "i-am-blocking"
@@ -527,22 +549,24 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address o@o.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userOpheliaSwan.id,
+          selectedUserId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBlocked: true,
+        blockedAt: new Date(),
         selectingUserId: userOpheliaSwan.id,
         selectedUserId: userLePapier.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBlocked: true,
-      blockedAt: new Date(),
-      selectingUserId: userOpheliaSwan.id,
-      selectedUserId: userLePapier.id,
-    },
-  });
+    }),
+  );
 
   // “me” and Pamela / relation combination “blocking-and-blocked” in v2
   // meaning “me” and Pamela / contacts combination "i-am-blocking"...
@@ -554,45 +578,107 @@ async function seed() {
       `Error: Somehow the user with the sign-in email address p@p.com was not found.`,
     );
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userLePapier.id,
+          selectedUserId: userPimPamPoum.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBlocked: true,
+        blockedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userPimPamPoum.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBlocked: true,
-      blockedAt: new Date(),
-      selectingUserId: userLePapier.id,
-      selectedUserId: userPimPamPoum.id,
-    },
-  });
+    }),
+  );
 
   // ...and Pamela and “me” / contacts combination "i-am-blocking"
 
-  await prisma.relation.upsert({
-    where: {
-      selectingUserId_selectedUserId: {
+  relations.push(
+    await prisma.relation.upsert({
+      where: {
+        selectingUserId_selectedUserId: {
+          selectingUserId: userPimPamPoum.id,
+          selectedUserId: userLePapier.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isBlocked: true,
+        blockedAt: new Date(),
         selectingUserId: userPimPamPoum.id,
         selectedUserId: userLePapier.id,
       },
-    },
-    update: {},
-    create: {
-      state: "LIVE",
-      isBlocked: true,
-      blockedAt: new Date(),
-      selectingUserId: userPimPamPoum.id,
-      selectedUserId: userLePapier.id,
-    },
-  });
+    }),
+  );
 
   // NOTE: USERS FROM QUENTIN TO XENOBIA ARE CURRENTLY NO LONGER NEEDED AS SEEDS BECAUSE THE FRIEND AND IRL FLOWS ARE REMOVED IN V3.
 
+  console.log({ relations });
+
   console.log(`...Relations seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  console.log(`Seeding GroupsOfUsers...`);
+
+  const groupsOfUsers = [];
+
+  console.log(`Seeding "Friends"' GroupsOfUsers...`);
+
+  for (const user of users) {
+    const groupOfUsers = await prisma.groupOfUsers.upsert({
+      where: {
+        name_creatorUserId: {
+          name: "Friends",
+          creatorUserId: user.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        name: "Friends",
+        description: "My friends, including IRLs, exactly like in v2.",
+        creatorUserId: user.id,
+      },
+    });
+
+    groupsOfUsers.push(groupOfUsers);
+  }
+
+  console.log(`..."Friends"' GroupsOfUsers seeded.`);
+
+  console.log(`Seeding "IRLs"' GroupsOfUsers...`);
+
+  for (const user of users) {
+    const groupOfUsers = await prisma.groupOfUsers.upsert({
+      where: {
+        name_creatorUserId: {
+          name: "IRLs",
+          creatorUserId: user.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        name: "IRLs",
+        description: "My IRLs, excluding friends, exactly like in v2.",
+        creatorUserId: user.id,
+      },
+    });
+
+    groupsOfUsers.push(groupOfUsers);
+  }
+
+  console.log(`..."IRLs"' GroupsOfUsers seeded.`);
+
+  console.log(`...GroupsOfUsers seeded.`);
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -735,6 +821,8 @@ async function seed() {
 
   console.log(`Seeding GroupOfCriteriaCriteria...`);
 
+  const groupOfCriteriaCriteria = [];
+
   console.log(
     `Seeding "Names"' GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria...`,
   );
@@ -767,34 +855,36 @@ async function seed() {
         `Somehow the criterion with the user ID of ${user.username} and the question "First name" was not found.`,
       );
 
-    await prisma.groupOfCriteriaCriterion.upsert({
-      where: {
-        groupOfCriteriaId_criterionId: {
-          groupOfCriteriaId: groupOfCriteria.id,
-          criterionId: criterion.id,
+    groupOfCriteriaCriteria.push(
+      await prisma.groupOfCriteriaCriterion.upsert({
+        where: {
+          groupOfCriteriaId_criterionId: {
+            groupOfCriteriaId: groupOfCriteria.id,
+            criterionId: criterion.id,
+          },
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        groupOfCriteria: {
-          connect: {
-            name_creatorUserId: {
-              name: "Names",
-              creatorUserId: user.id,
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfCriteria: {
+            connect: {
+              name_creatorUserId: {
+                name: "Names",
+                creatorUserId: user.id,
+              },
+            },
+          },
+          criterion: {
+            connect: {
+              question_userId: {
+                question: "First name",
+                userId: user.id,
+              },
             },
           },
         },
-        criterion: {
-          connect: {
-            question_userId: {
-              question: "First name",
-              userId: user.id,
-            },
-          },
-        },
-      },
-    });
+      }),
+    );
   }
 
   console.log(
@@ -833,39 +923,43 @@ async function seed() {
         `Error: Somehow the criterion with the user ID of ${user.username} and the question "Last name" was not found.`,
       );
 
-    await prisma.groupOfCriteriaCriterion.upsert({
-      where: {
-        groupOfCriteriaId_criterionId: {
-          groupOfCriteriaId: groupOfCriteria.id,
-          criterionId: criterion.id,
+    groupOfCriteriaCriteria.push(
+      await prisma.groupOfCriteriaCriterion.upsert({
+        where: {
+          groupOfCriteriaId_criterionId: {
+            groupOfCriteriaId: groupOfCriteria.id,
+            criterionId: criterion.id,
+          },
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        groupOfCriteria: {
-          connect: {
-            name_creatorUserId: {
-              name: "Names",
-              creatorUserId: user.id,
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfCriteria: {
+            connect: {
+              name_creatorUserId: {
+                name: "Names",
+                creatorUserId: user.id,
+              },
+            },
+          },
+          criterion: {
+            connect: {
+              question_userId: {
+                question: "Last name",
+                userId: user.id,
+              },
             },
           },
         },
-        criterion: {
-          connect: {
-            question_userId: {
-              question: "Last name",
-              userId: user.id,
-            },
-          },
-        },
-      },
-    });
+      }),
+    );
   }
 
   console.log(
     `..."Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria seeded.`,
   );
+
+  console.log({ groupOfCriteriaCriteria });
 
   console.log(`...GroupOfCriteriaCriteria seeded.`);
 

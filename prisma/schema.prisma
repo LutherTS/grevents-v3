@@ -74,27 +74,6 @@ model Relation {
   pinningUser                    User?                     @relation("PinnedRelation")
 }
 
-model Criterion {
-  id                             String                    @id @default(uuid())
-  state                          String                    @default("NONE")
-
-  question                       String
-  answer                         String
-  source                         String?
-
-  createdAt                      DateTime                  @default(now())
-  updatedAt                      DateTime                  @updatedAt @default(now())
-
-  userId                         String
-  user                           User                      @relation(fields: [userId], references: [id])
-
-  @@unique([question, userId])
-
-  monoCriterionGroups            GroupOfCriteria[] 
-
-  groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]
-}
-
 // common Group base for Users
 model GroupOfUsers {
   id                             String                    @id @default(uuid())
@@ -134,6 +113,27 @@ model GroupOfUsersUser {
   user                           User                      @relation(fields: [userId], references: [id])
 
   @@unique([groupOfUsersId, userId])
+}
+
+model Criterion {
+  id                             String                    @id @default(uuid())
+  state                          String                    @default("NONE")
+
+  question                       String
+  answer                         String
+  source                         String?
+
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt @default(now())
+
+  userId                         String
+  user                           User                      @relation(fields: [userId], references: [id])
+
+  @@unique([question, userId])
+
+  monoCriterionGroups            GroupOfCriteria[] 
+
+  groupsOfCriteriaCriterion      GroupOfCriteriaCriterion[]
 }
 
 // common Group base for Criteria

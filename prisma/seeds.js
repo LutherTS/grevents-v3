@@ -301,8 +301,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userAliceChan.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userAliceChan.id,
       },
     },
     update: {},
@@ -330,8 +330,8 @@ async function seed() {
       state: "LIVE",
       isBookmarked: true,
       bookmarkedAt: new Date(),
-      selectedUserId: userAliceChan.id,
-      selectingUserId: userLePapier.id,
+      selectingUserId: userAliceChan.id,
+      selectedUserId: userLePapier.id,
     },
   });
 
@@ -347,8 +347,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userTrovounette.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userTrovounette.id,
       },
     },
     update: {},
@@ -377,8 +377,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userCandi.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userCandi.id,
       },
     },
     update: {},
@@ -406,8 +406,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userDDan.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userDDan.id,
       },
     },
     update: {},
@@ -432,8 +432,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userLucario.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userLucario.id,
       },
     },
     update: {},
@@ -458,8 +458,8 @@ async function seed() {
   await prisma.relation.upsert({
     where: {
       selectingUserId_selectedUserId: {
-        selectedUserId: userLePapier.id,
-        selectingUserId: userMisterX.id,
+        selectingUserId: userLePapier.id,
+        selectedUserId: userMisterX.id,
       },
     },
     update: {},
@@ -486,8 +486,8 @@ async function seed() {
       state: "LIVE",
       isBookmarked: true,
       bookmarkedAt: new Date(),
-      selectedUserId: userMisterX.id,
-      selectingUserId: userLePapier.id,
+      selectingUserId: userMisterX.id,
+      selectedUserId: userLePapier.id,
     },
   });
 
@@ -512,8 +512,8 @@ async function seed() {
       state: "LIVE",
       isBlocked: true,
       blockedAt: new Date(),
-      selectedUserId: userLePapier.id,
-      selectingUserId: userNonyes.id,
+      selectingUserId: userLePapier.id,
+      selectedUserId: userNonyes.id,
     },
   });
 
@@ -539,8 +539,8 @@ async function seed() {
       state: "LIVE",
       isBlocked: true,
       blockedAt: new Date(),
-      selectedUserId: userOpheliaSwan.id,
-      selectingUserId: userLePapier.id,
+      selectingUserId: userOpheliaSwan.id,
+      selectedUserId: userLePapier.id,
     },
   });
 
@@ -566,8 +566,8 @@ async function seed() {
       state: "LIVE",
       isBlocked: true,
       blockedAt: new Date(),
-      selectedUserId: userLePapier.id,
-      selectingUserId: userPimPamPoum.id,
+      selectingUserId: userLePapier.id,
+      selectedUserId: userPimPamPoum.id,
     },
   });
 
@@ -585,8 +585,8 @@ async function seed() {
       state: "LIVE",
       isBlocked: true,
       blockedAt: new Date(),
-      selectedUserId: userPimPamPoum.id,
-      selectingUserId: userLePapier.id,
+      selectingUserId: userPimPamPoum.id,
+      selectedUserId: userLePapier.id,
     },
   });
 
