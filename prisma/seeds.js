@@ -315,6 +315,11 @@ async function seed() {
         bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userAliceChan.id,
+        pinningUser: {
+          connect: {
+            id: userLePapier.id,
+          },
+        },
       },
     }),
   );

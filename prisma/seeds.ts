@@ -252,6 +252,8 @@ async function seed() {
 
   console.log(`Seeding Users...`);
 
+  // const users = [];
+
   console.log(`Seeding all Users...`);
 
   const users = await Promise.all(
@@ -271,6 +273,25 @@ async function seed() {
       });
     }),
   );
+
+  // This below somehow presents a TypeScript error.
+  // for (const userData of usersData) {
+  //   users.push(
+  //     await prisma.user.upsert({
+  //       where: {
+  //         signInEmailAddress: userData.signInEmailAddress,
+  //       },
+  //       update: {},
+  //       create: {
+  //         state: "LIVE",
+  //         signInEmailAddress: userData.signInEmailAddress,
+  //         hashedPassword: userData.hashedPassword,
+  //         username: userData.username,
+  //         pseudoname: userData.pseudoname,
+  //       },
+  //     }),
+  //   );
+  // }
 
   console.log(`...All Users seeded.`);
 
@@ -315,6 +336,11 @@ async function seed() {
         bookmarkedAt: new Date(),
         selectingUserId: userLePapier.id,
         selectedUserId: userAliceChan.id,
+        pinningUser: {
+          connect: {
+            id: userLePapier.id,
+          },
+        },
       },
     }),
   );
@@ -1567,6 +1593,54 @@ async function seed() {
 
   ///////////////////////////////////////////////////////////////////////////
 
+  console.log(`Seeding UserCriteria...`);
+
+  const userCriteria = [];
+
+  console.log(`Seeding LePapier's First name of Alice-chan UserCriteria...`);
+
+  const criterionFirstNameAliceChan = criteria.find(
+    (e) => e.question === "First name" && e.userId === userAliceChan.id,
+  );
+
+  if (!criterionFirstNameAliceChan)
+    return console.error(
+      `Error: Somehow the criterion with the user ID of ${userAliceChan.username} and the question First name was not found.`,
+    );
+
+  userCriteria.push(
+    await prisma.userCriterion.upsert({
+      where: {
+        userId_criterionId: {
+          userId: userLePapier.id,
+          criterionId: criterionFirstNameAliceChan.id,
+        },
+      },
+      update: {},
+      create: {
+        state: "LIVE",
+        isPinnedForProfile: true,
+        pinnedForProfileAt: new Date(),
+        isPinnedForDashboard: true,
+        pinnedForDashboardAt: new Date(),
+        isPinnedForGroupOfUsers: true,
+        pinnedForGroupOfUsersAt: new Date(),
+        isPinnedForGroupOfCriteria: true,
+        pinnedForGroupOfCriteriaAt: new Date(),
+        userId: userLePapier.id,
+        criterionId: criterionFirstNameAliceChan.id,
+      },
+    }),
+  );
+
+  console.log(`...LePapier's First name of Alice-chan UserCriteria seeded.`);
+
+  console.log({ userCriteria });
+
+  console.log(`...UserCriteria seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
+
   console.log(`...Initial seeds complete.`);
 }
 
@@ -1587,4 +1661,25 @@ Do not confused Relation.isBlocked in v3 and and Contact.isBlocking in v2. They'
 - "The relation I have with you is blocked."
 - "The contact I have with you is blocking."
 Now that mirrors on Relations are truly optional, is there a case to be made for a Relation where selecting and selected are the same users?
+...
+Avoid Promise.all during the seeding process. The following:
+const users = await Promise.all(
+    usersData.map(async (userData) => {
+      return await prisma.user.upsert({
+        where: {
+          signInEmailAddress: userData.signInEmailAddress,
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          signInEmailAddress: userData.signInEmailAddress,
+          hashedPassword: userData.hashedPassword,
+          username: userData.username,
+          pseudoname: userData.pseudoname,
+        },
+      });
+    }),
+  );
+It looks cool, and it's faster, but that exactly the issue. It doesn't prevents users from being organized by createdAt since all creating were pretty much fired at the same time and therefore have the same timestamp.
+Just a heads-up, the issue I had with connecting pinningUser was because it was only in create, not in update, so since the entry already existed it couldn't be updated accordingly;
 */
