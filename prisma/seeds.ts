@@ -1416,6 +1416,140 @@ async function seed() {
 
   ///////////////////////////////////////////////////////////////////////////
 
+  console.log(`Seeding GroupOfUsersGroupOfCriteria...`);
+
+  const groupOfUsersGroupsOfCriteria = [];
+
+  console.log(
+    `Seeding "Friends"' GroupsOfUsers' GroupsOfCriteria – GroupOfUsersGroupOfCriteria...`,
+  );
+
+  const usersWithFirstNames = usersDataWithFirstNames.map((e) => {
+    return users.find((e2) => e.signInEmailAddress === e2.signInEmailAddress);
+  });
+
+  for (const userWithFirstNames of usersWithFirstNames) {
+    const groupOfUsersFriends = groupsOfUsers.find(
+      (e) =>
+        userWithFirstNames &&
+        userWithFirstNames.id === e.creatorUserId &&
+        e.name === "Friends",
+    );
+
+    if (!groupOfUsersFriends) return;
+
+    const groupOfCriteriaFirstName = groupsOfCriteria.find(
+      (e) =>
+        userWithFirstNames &&
+        userWithFirstNames.id === e.creatorUserId &&
+        e.name === "First name",
+    );
+
+    if (!groupOfCriteriaFirstName) return;
+
+    groupOfUsersGroupsOfCriteria.push(
+      await prisma.groupOfUsersGroupOfCriteria.upsert({
+        where: {
+          groupOfUsersId_groupOfCriteriaId: {
+            groupOfUsersId: groupOfUsersFriends.id,
+            groupOfCriteriaId: groupOfCriteriaFirstName.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfUsersId: groupOfUsersFriends.id,
+          groupOfCriteriaId: groupOfCriteriaFirstName.id,
+        },
+      }),
+    );
+  }
+
+  console.log(
+    `..."Friends"' GroupsOfUsers' GroupsOfCriteria – GroupOfUsersGroupOfCriteria seeded.`,
+  );
+
+  console.log(
+    `Seeding "IRLs"' GroupsOfUsers' GroupsOfCriteria – GroupOfUsersGroupOfCriteria...`,
+  );
+
+  const usersWithFirstNamesLastNames = usersDataWithFirstNamesLastNames.map(
+    (e) => {
+      return users.find((e2) => e.signInEmailAddress === e2.signInEmailAddress);
+    },
+  );
+
+  for (const userWithFirstNamesLastNames of usersWithFirstNamesLastNames) {
+    const groupOfUsersIrls = groupsOfUsers.find(
+      (e) =>
+        userWithFirstNamesLastNames &&
+        userWithFirstNamesLastNames.id === e.creatorUserId &&
+        e.name === "IRLs",
+    );
+
+    if (!groupOfUsersIrls) return;
+
+    const groupOfCriteriaFirstName = groupsOfCriteria.find(
+      (e) =>
+        userWithFirstNamesLastNames &&
+        userWithFirstNamesLastNames.id === e.creatorUserId &&
+        e.name === "First name",
+    );
+
+    if (!groupOfCriteriaFirstName) return;
+
+    groupOfUsersGroupsOfCriteria.push(
+      await prisma.groupOfUsersGroupOfCriteria.upsert({
+        where: {
+          groupOfUsersId_groupOfCriteriaId: {
+            groupOfUsersId: groupOfUsersIrls.id,
+            groupOfCriteriaId: groupOfCriteriaFirstName.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfUsersId: groupOfUsersIrls.id,
+          groupOfCriteriaId: groupOfCriteriaFirstName.id,
+        },
+      }),
+    );
+
+    const groupOfCriteriaNames = groupsOfCriteria.find(
+      (e) =>
+        userWithFirstNamesLastNames &&
+        userWithFirstNamesLastNames.id === e.creatorUserId &&
+        e.name === "Names",
+    );
+
+    if (!groupOfCriteriaNames) return;
+
+    groupOfUsersGroupsOfCriteria.push(
+      await prisma.groupOfUsersGroupOfCriteria.upsert({
+        where: {
+          groupOfUsersId_groupOfCriteriaId: {
+            groupOfUsersId: groupOfUsersIrls.id,
+            groupOfCriteriaId: groupOfCriteriaNames.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfUsersId: groupOfUsersIrls.id,
+          groupOfCriteriaId: groupOfCriteriaNames.id,
+        },
+      }),
+    );
+  }
+
+  console.log(
+    `..."IRLs"' GroupsOfUsers' GroupsOfCriteria – GroupOfUsersGroupOfCriteria seeded.`,
+  );
+
+  console.log(`...GroupOfUsersGroupOfCriteria seeded.`);
+
+  ///////////////////////////////////////////////////////////////////////////
+
   console.log(`...Initial seeds complete.`);
 }
 

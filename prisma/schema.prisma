@@ -191,6 +191,8 @@ model GroupOfUsersGroupOfCriteria {
 
   groupOfCriteriaId              String
   groupOfCriteria                GroupOfCriteria           @relation(fields: [groupOfCriteriaId], references: [id])
+
+  @@unique([groupOfUsersId, groupOfCriteriaId])
 }
 
 model UserGroupOfCriteriaCriterion {

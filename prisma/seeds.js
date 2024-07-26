@@ -252,27 +252,25 @@ async function seed() {
 
   console.log(`Seeding Users...`);
 
-  const users = [];
-
   console.log(`Seeding all Users...`);
 
-  for (const userData of usersData) {
-    const user = await prisma.user.upsert({
-      where: {
-        signInEmailAddress: userData.signInEmailAddress,
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        signInEmailAddress: userData.signInEmailAddress,
-        hashedPassword: userData.hashedPassword,
-        username: userData.username,
-        pseudoname: userData.pseudoname,
-      },
-    });
-
-    users.push(user);
-  }
+  const users = await Promise.all(
+    usersData.map(async (userData) => {
+      return await prisma.user.upsert({
+        where: {
+          signInEmailAddress: userData.signInEmailAddress,
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          signInEmailAddress: userData.signInEmailAddress,
+          hashedPassword: userData.hashedPassword,
+          username: userData.username,
+          pseudoname: userData.pseudoname,
+        },
+      });
+    }),
+  );
 
   console.log(`...All Users seeded.`);
 
@@ -633,23 +631,23 @@ async function seed() {
   console.log(`Seeding "Friends"' GroupsOfUsers...`);
 
   for (const user of users) {
-    const groupOfUsers = await prisma.groupOfUsers.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfUsers.push(
+      await prisma.groupOfUsers.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "Friends",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "Friends",
+          description: "My friends, including IRLs, exactly like in v2.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "Friends",
-        description: "My friends, including IRLs, exactly like in v2.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfUsers.push(groupOfUsers);
+      }),
+    );
   }
 
   console.log(`..."Friends"' GroupsOfUsers seeded.`);
@@ -657,23 +655,23 @@ async function seed() {
   console.log(`Seeding "IRLs"' GroupsOfUsers...`);
 
   for (const user of users) {
-    const groupOfUsers = await prisma.groupOfUsers.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfUsers.push(
+      await prisma.groupOfUsers.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "IRLs",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "IRLs",
+          description: "My IRLs, excluding friends, exactly like in v2.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "IRLs",
-        description: "My IRLs, excluding friends, exactly like in v2.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfUsers.push(groupOfUsers);
+      }),
+    );
   }
 
   console.log(`..."IRLs"' GroupsOfUsers seeded.`);
@@ -1041,23 +1039,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const criterion = await prisma.criterion.upsert({
-      where: {
-        question_userId: {
+    criteria.push(
+      await prisma.criterion.upsert({
+        where: {
+          question_userId: {
+            question: "First name",
+            userId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           question: "First name",
+          answer: userData.firstNameAnswer,
           userId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        question: "First name",
-        answer: userData.firstNameAnswer,
-        userId: user.id,
-      },
-    });
-
-    criteria.push(criterion);
+      }),
+    );
   }
 
   console.log(`...First names Criteria seeded.`);
@@ -1080,23 +1078,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const criterion = await prisma.criterion.upsert({
-      where: {
-        question_userId: {
+    criteria.push(
+      await prisma.criterion.upsert({
+        where: {
+          question_userId: {
+            question: "Last name",
+            userId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           question: "Last name",
+          answer: userData.lastNameAnswer,
           userId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        question: "Last name",
-        answer: userData.lastNameAnswer,
-        userId: user.id,
-      },
-    });
-
-    criteria.push(criterion);
+      }),
+    );
   }
 
   console.log(`...Last names Criteria seeded.`);
@@ -1129,23 +1127,23 @@ async function seed() {
         `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
       );
 
-    const groupOfCriteria = await prisma.groupOfCriteria.upsert({
-      where: {
-        name_creatorUserId: {
+    groupsOfCriteria.push(
+      await prisma.groupOfCriteria.upsert({
+        where: {
+          name_creatorUserId: {
+            name: "Names",
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
           name: "Names",
+          description: "My first name, last name and other names.",
           creatorUserId: user.id,
         },
-      },
-      update: {},
-      create: {
-        state: "LIVE",
-        name: "Names",
-        description: "My first name, last name and other names.",
-        creatorUserId: user.id,
-      },
-    });
-
-    groupsOfCriteria.push(groupOfCriteria);
+      }),
+    );
   }
 
   console.log(`..."Names"' GroupsOfCriteria seeded.`);
@@ -2596,6 +2594,54 @@ https://remix.run/docs/en/main/tutorials/jokes
 
   console.log(`..."Names"' GroupsOfCriteria seeded.`);
 
+  console.log(`Seeding "First Names"' Mono-GroupsOfCriteria...`);
+
+  // NOTE: WHAT DIFFERENTIATES A MONOGROUPOFCRITERIA FROM A GROUPOFCRITERIA
+  // - automatic name: the name is the question of the criteria
+  // - automatic description: the description is dynamic from the question of the criteria (${question} is its own mono-group of criteria) or just mono, or even just no description at all. (To be decided on the frontend.)
+  // - monoCriterion or monoCriterionId is filled.
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const criterionFirstName = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterionFirstName)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupsOfCriteria.push(
+      await prisma.groupOfCriteria.upsert({
+        where: {
+          name_creatorUserId: {
+            name: criterionFirstName.question,
+            creatorUserId: user.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          name: criterionFirstName.question,
+          description: `${criterionFirstName.question} – as its own mono-group of criteria.`,
+          creatorUserId: user.id,
+          monoCriterionId: criterionFirstName.id,
+        },
+      }),
+    );
+  }
+
+  console.log(`..."First Names"' Mono-GroupsOfCriteria seeded.`);
+
   console.log({ groupsOfCriteria });
 
   console.log(`...GroupsOfCriteria seeded.`);
@@ -2626,7 +2672,7 @@ https://remix.run/docs/en/main/tutorials/jokes
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -2635,7 +2681,7 @@ https://remix.run/docs/en/main/tutorials/jokes
 
     if (!criterion)
       return console.error(
-        `Somehow the criterion with the user ID of ${user.username} and the question "First name" was not found.`,
+        `Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
@@ -2694,7 +2740,7 @@ https://remix.run/docs/en/main/tutorials/jokes
 
     if (!groupOfCriteria)
       return console.error(
-        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name "Names" was not found.`,
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name Names was not found.`,
       );
 
     const criterion = criteria.find(
@@ -2703,7 +2749,7 @@ https://remix.run/docs/en/main/tutorials/jokes
 
     if (!criterion)
       return console.error(
-        `Error: Somehow the criterion with the user ID of ${user.username} and the question "Last name" was not found.`,
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question Last name was not found.`,
       );
 
     groupOfCriteriaCriteria.push(
@@ -2740,6 +2786,74 @@ https://remix.run/docs/en/main/tutorials/jokes
 
   console.log(
     `..."Names"' GroupsOfCriteria' "Last name" Criteria – GroupOfCriteriaCriteria seeded.`,
+  );
+
+  console.log(
+    `Seeding "First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria...`,
+  );
+
+  for (const userData of usersDataWithFirstNames) {
+    const user = users.find(
+      (e) => e.signInEmailAddress === userData.signInEmailAddress,
+    );
+
+    if (!user)
+      return console.error(
+        `Error: Somehow the user with the sign-in email address ${userData.signInEmailAddress} was not found.`,
+      );
+
+    const groupOfCriteria = groupsOfCriteria.find(
+      (e) => e.creatorUserId === user.id && e.name === "First name",
+    );
+
+    if (!groupOfCriteria)
+      return console.error(
+        `Error: Somehow the group of criteria with the creator user ID of ${user.username} and the name First name was not found.`,
+      );
+
+    const criterion = criteria.find(
+      (e) => e.userId === user.id && e.question === "First name",
+    );
+
+    if (!criterion)
+      return console.error(
+        `Error: Somehow the criterion with the user ID of ${user.username} and the question First name was not found.`,
+      );
+
+    groupOfCriteriaCriteria.push(
+      await prisma.groupOfCriteriaCriterion.upsert({
+        where: {
+          groupOfCriteriaId_criterionId: {
+            groupOfCriteriaId: groupOfCriteria.id,
+            criterionId: criterion.id,
+          },
+        },
+        update: {},
+        create: {
+          state: "LIVE",
+          groupOfCriteria: {
+            connect: {
+              name_creatorUserId: {
+                name: "First name",
+                creatorUserId: user.id,
+              },
+            },
+          },
+          criterion: {
+            connect: {
+              question_userId: {
+                question: "First name",
+                userId: user.id,
+              },
+            },
+          },
+        },
+      }),
+    );
+  }
+
+  console.log(
+    `..."First names"' Mono-GroupsOfCriteria' "First name" Criteria – GroupOfCriteriaCriteria seeded.`,
   );
 
   console.log({ groupOfCriteriaCriteria });
